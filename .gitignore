@@ -1,0 +1,5 @@
+# git ignore file to ignore some python files and some other files
+
+env
+/env/
+env/
