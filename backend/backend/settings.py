@@ -31,12 +31,27 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    # Local apps
+    'accounts',
+    'chats',
+    'music',
+    'channel',
+
+    # Third party apps
+    'corsheaders',
+    'drf_yasg',
+    'rest_framework',
+    'phonenumber_field',
+    'nested_admin',
+    
 ]
 
 MIDDLEWARE = [
@@ -68,6 +83,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "backend.wsgi.application"
+ASGI_APPLICATION = "backend.asgi.application"
+
+
+AUTH_USER_MODEL = "accounts.User"
 
 
 # Database
