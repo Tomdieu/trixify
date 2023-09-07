@@ -40,7 +40,7 @@ class LikeAdmin(admin.ModelAdmin):
 @admin.register(View)
 class ViewAdmin(admin.ModelAdmin):
     list_display = ('user','post')
-
+    
 @admin.register(Poll)
 class PollAdmin(admin.ModelAdmin):
     list_display = ('question','pub_date','end_date','ended')
