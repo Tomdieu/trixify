@@ -25,6 +25,7 @@ class GroupConversation(Chat):
     group_icon = models.ImageField(upload_to='group_icons/', null=True, blank=True)
     description = models.TextField(null=True,blank=True)
     created_by = models.ForeignKey(User, related_name='created_conversations', on_delete=models.CASCADE)
+    users = models.ManyToManyField(User,through='GroupMember',related_name='group_conversations')
 
 
 class GroupMember(models.Model):
@@ -65,7 +66,7 @@ class Seen(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
-        return f'{self.user} - {self.message} - {self.seen}'
+        return f'{self.user} - {self.message}'
 
 
 class Story(models.Model):
