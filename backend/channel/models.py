@@ -70,7 +70,9 @@ class Poll(models.Model):
 
     @property
     def ended(self)->bool:
-        return timezone.now() > self.end_date
+        # Convert self.end_date to a datetime object for comparison
+        end_datetime = timezone.make_aware(timezone.datetime.combine(self.end_date, timezone.datetime.min.time()))
+        return timezone.now() > end_datetime
 
     def __str__(self):
         return self.question
