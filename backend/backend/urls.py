@@ -49,6 +49,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+<<<<<<< HEAD
     re_path(r"^_nested_admin/", include("nested_admin.urls")),
     re_path(r"^auth/", include("drf_social_oauth2.urls", namespace="drf")),
     path(
@@ -82,6 +83,10 @@ urlpatterns = [
             ]
         ),
     ),
+=======
+    re_path(r'^_nested_admin/', include('nested_admin.urls')),
+    re_path(r'^auth/', include('drf_social_oauth2.urls', namespace='drf'))
+>>>>>>> 26e28277cff93fc2a56d63c6829b993fba135a24
 ]
 
 

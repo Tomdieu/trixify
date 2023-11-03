@@ -40,12 +40,16 @@ class LikeAdmin(admin.ModelAdmin):
 @admin.register(View)
 class ViewAdmin(admin.ModelAdmin):
     list_display = ('user','post')
+<<<<<<< HEAD
 
 class AnswerInline(admin.TabularInline):
     model = Answer
     extra = 1
     readonly_fields = ['votes_count']
 
+=======
+    
+>>>>>>> 26e28277cff93fc2a56d63c6829b993fba135a24
 @admin.register(Poll)
 class PollAdmin(admin.ModelAdmin):
     list_display = ('question','pub_date','end_date','ended')

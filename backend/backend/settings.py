@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "posts",
     "story",
     # Third party apps
+<<<<<<< HEAD
     "corsheaders",
     "drf_yasg",
     "rest_framework",
@@ -56,6 +57,19 @@ INSTALLED_APPS = [
     "oauth2_provider",
     "social_django",
     "drf_social_oauth2",
+=======
+    'corsheaders',
+    'drf_yasg',
+    'rest_framework',
+    'phonenumber_field',
+    'nested_admin',
+
+    # OAuth
+    'oauth2_provider',
+    'social_django',
+    'drf_social_oauth2',
+
+>>>>>>> 26e28277cff93fc2a56d63c6829b993fba135a24
 ]
 
 MIDDLEWARE = [
@@ -81,16 +95,27 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+<<<<<<< HEAD
                 "social_django.context_processors.backends",
                 "social_django.context_processors.login_redirect",
+=======
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
+>>>>>>> 26e28277cff93fc2a56d63c6829b993fba135a24
             ],
         },
     },
 ]
 
 AUTHENTICATION_BACKENDS = (
+<<<<<<< HEAD
     "drf_social_oauth2.backends.DjangoOAuth2",
     "django.contrib.auth.backends.ModelBackend",
+=======
+
+    'drf_social_oauth2.backends.DjangoOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+>>>>>>> 26e28277cff93fc2a56d63c6829b993fba135a24
 )
 
 
@@ -155,16 +180,24 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 REST_FRAMEWORK = {
+<<<<<<< HEAD
     "DEFAULT_AUTHENTICATION_CLASSES": (
         # django-oauth-˓→toolkit >= 1.0.0
         "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
         "drf_social_oauth2.authentication.SocialAuthentication",
+=======
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # django-oauth-˓→toolkit >= 1.0.0
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'drf_social_oauth2.authentication.SocialAuthentication',
+>>>>>>> 26e28277cff93fc2a56d63c6829b993fba135a24
     ),
 }
 
 
 AUTHENTICATION_BACKENDS = (
     # Others auth providers (e.g. Facebook, OpenId, etc)
+<<<<<<< HEAD
     # Google OAuth2
     "social_core.backends.google.GoogleOAuth2",
     # drf-social-oauth2
@@ -179,4 +212,21 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "<your app secret goes here>"
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     "https://www.googleapis.com/auth/userinfo.email",
     "https://www.googleapis.com/auth/userinfo.profile",
+=======
+
+    # Google OAuth2
+    'social_core.backends.google.GoogleOAuth2', 
+    # drf-social-oauth2
+    'drf_social_oauth2.backends.DjangoOAuth2',
+    # Django
+    'django.contrib.auth.backends.ModelBackend',
+)
+# Google configuration
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '<your app id goes here>'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '<your app secret goes here>'
+# Define SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE to get extra permissions from Google.
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+>>>>>>> 26e28277cff93fc2a56d63c6829b993fba135a24
 ]
