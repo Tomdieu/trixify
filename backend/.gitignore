@@ -1,8 +1,6 @@
-<<<<<<< HEAD
 .env
 venv
 .idea
-=======
 # Django-related files and directories
 __pycache__/
 *.pyc
@@ -39,4 +37,3 @@ bower_components/
 
 # Local development files
 db.sqlite3
->>>>>>> 26e28277cff93fc2a56d63c6829b993fba135a24

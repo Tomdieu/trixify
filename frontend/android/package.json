@@ -6,7 +6,8 @@
     "start": "expo start --clear",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "offline":"expo start --offline"
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
