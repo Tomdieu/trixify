@@ -1,9 +1,9 @@
 {
-  "name": "frontend",
+  "name": "trixify",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "expo start --tunnel --clear",
+    "start": "expo start --clear",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web"
@@ -35,7 +35,8 @@
     "react-native-reanimated": "~3.3.0",
     "react-native-safe-area-context": "4.6.3",
     "react-native-screens": "~3.22.0",
-    "react-native-web": "~0.19.6"
+    "react-native-web": "~0.19.6",
+    "react-native-websocket": "^1.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",

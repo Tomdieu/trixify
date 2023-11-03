@@ -7,7 +7,7 @@
     "plugins": [
       "expo-router"
     ],
-    "name": "frontend",
-    "slug": "frontend"
+    "name": "trixify",
+    "slug": "trixify"
   }
 }
