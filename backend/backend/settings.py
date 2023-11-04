@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = "django-insecure-oucgf5e2*wd0$j%oo0_4-c*5@1df&f#w90a*grdi@(04-yo*1h
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -45,6 +43,7 @@ INSTALLED_APPS = [
     "channel",
     "posts",
     "story",
+    "shorts",
     # Third party apps
     "corsheaders",
     "drf_yasg",
@@ -56,12 +55,6 @@ INSTALLED_APPS = [
     "oauth2_provider",
     "social_django",
     "drf_social_oauth2",
-    'corsheaders',
-    'drf_yasg',
-    'rest_framework',
-    'phonenumber_field',
-    'nested_admin',
-
 ]
 
 MIDDLEWARE = [
@@ -89,25 +82,29 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "social_django.context_processors.backends",
                 "social_django.context_processors.login_redirect",
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
             ],
         },
     },
 ]
 
 AUTHENTICATION_BACKENDS = (
-    "drf_social_oauth2.backends.DjangoOAuth2",
-    "django.contrib.auth.backends.ModelBackend",
-)
+    # Others auth providers (e.g. Facebook, OpenId, etc)
 
+    # Google OAuth2
+    'social_core.backends.google.GoogleOAuth2',
+    # GitHub OAuth2
+    'social_core.backends.github.GithubOAuth2',
+    # drf-social-oauth2
+    'drf_social_oauth2.backends.DjangoOAuth2',
+    # Django
+    'django.contrib.auth.backends.ModelBackend',
+
+)
 
 WSGI_APPLICATION = "backend.wsgi.application"
 ASGI_APPLICATION = "backend.asgi.application"
 
-
 AUTH_USER_MODEL = "accounts.User"
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -118,7 +115,6 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -138,7 +134,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -150,17 +145,17 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
 
+STATIC_ROOT = BASE_DIR/'static_root'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -170,17 +165,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-
-AUTHENTICATION_BACKENDS = (
-    # Others auth providers (e.g. Facebook, OpenId, etc)
-
-    # Google OAuth2
-    'social_core.backends.google.GoogleOAuth2', 
-    # drf-social-oauth2
-    'drf_social_oauth2.backends.DjangoOAuth2',
-    # Django
-    'django.contrib.auth.backends.ModelBackend',
-)
 # Google configuration
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '<your app id goes here>'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '<your app secret goes here>'
@@ -189,3 +173,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/userinfo.profile',
 ]
+
+# GitHub configuration
+SOCIAL_AUTH_GITHUB_KEY = "<your app id goes here>"
+SOCIAL_AUTH_GITHUB_SECRET = "<your app secret goes here>"

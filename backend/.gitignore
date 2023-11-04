@@ -1,4 +1,8 @@
+/static_root/
+static_root
+
 .env
+.env.local
 venv
 .idea
 # Django-related files and directories
@@ -10,7 +14,6 @@ __pycache__/
 
 # Virtual environment
 venv/
-.env
 
 # User-specific files
 *.log
