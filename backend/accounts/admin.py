@@ -62,6 +62,7 @@ class UserAdmin(_UserAdmin):
             },
         ),
     )
+    list_per_page = 25
     search_fields = ("username", "first_name", "last_name", "email", "phone_number")
     list_display = ("username", "email", "first_name", "last_name", "is_staff")
     list_filter = ("is_staff", "is_superuser", "is_active", "groups")
@@ -73,8 +74,10 @@ class UserAdmin(_UserAdmin):
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ("user", "bio")
     inlines = [UserSocialLinksInline]
+    list_per_page = 25
 
 
 @admin.register(UserSocialLinks)
 class UserSocialLinksAdmin(admin.ModelAdmin):
-    pass
+    list_per_page = 25
+    list_display = ['id','label','url']

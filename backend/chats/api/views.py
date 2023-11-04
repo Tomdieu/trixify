@@ -18,6 +18,7 @@ from .serializers import (
     MessageTypeSerializer,
     FileMessageSerializer,
     TextMessageSerializer,
+    MessageReactionsSerializer
 )
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -33,6 +34,8 @@ from chats.models import (
     MessageType,
     FileMessage,
     TextMessage,
+    LinkMessage, StoryReplyMessage,
+    MessageReactions
 )
 
 
@@ -106,3 +109,14 @@ class GroupMemberViewSet(
 ):
     queryset = GroupMember.objects.all()
     serializer_class = GroupMemberSerializer
+
+
+class MessageReactionViewSet(CreateModelMixin,
+                             ListModelMixin,
+                             RetrieveModelMixin,
+                             UpdateModelMixin,
+                             DestroyModelMixin,
+                             GenericViewSet, ):
+
+    queryset = MessageReactions.objects.all()
+    serializer_class = MessageReactionsSerializer

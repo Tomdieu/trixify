@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from polymorphic.models import PolymorphicModel
 
 # Create your models here.
 
@@ -43,22 +44,35 @@ class PostComment(models.Model):
         return f"{self.content}"
 
 
-class PostReactions(models.Model):
+class Reaction(PolymorphicModel):
     REACTIONS = (
-        ("LIKE", "LIKE"),
-        ("LOVE", "LOVE"),
-        ("HAHA", "HAHA"),
-        ("WOW", "WOW"),
-        ("SAD", "SAD"),
-        ("ANGRY", "ANGRY"),
+        ("LIKE", "👍"),
+        ("LOVE", "😍"),
+        ("HAHA", "🤣"),
+        ("WOW", "😲"),
+        ("SAD", "😓"),
+        ("ANGRY", "😡"),
     )
-    post = models.ForeignKey(Post, related_name="reactions", on_delete=models.CASCADE)
-    reaction = models.CharField(max_length=10)
-    created_by = models.ForeignKey(
-        User, related_name="created_reactions", on_delete=models.CASCADE
-    )
+    reaction = models.CharField(max_length=10, choices=REACTIONS)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(
+        User, related_name="impressions", on_delete=models.CASCADE
+    )
 
     def __str__(self):
-        return f"{self.reaction}"
+        return f"User : {self.user} React : {self.reaction}"
+
+
+class PostReactions(Reaction):
+    post = models.ForeignKey(Post, related_name="reactions", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user} React : {self.reaction} to  Post : {self.post}"
+
+
+class CommentReactions(Reaction):
+    comment = models.ForeignKey(PostComment, related_name="reactions", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user} React : {self.reaction} to Comment : {self.comment}"

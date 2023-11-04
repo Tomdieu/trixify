@@ -49,37 +49,44 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     re_path(r"^_nested_admin/", include("nested_admin.urls")),
     re_path(r"^auth/", include("drf_social_oauth2.urls", namespace="drf")),
-    path(
-        "api/",
-        include(
-            [
-                path("accounts/", include("accounts.urls")),
-                path("chats/", include("chats.api.urls")),
-                path(
-                    "docs/",
-                    include(
-                        [
-                            re_path(
-                                r"^swagger(?P<format>\.json|\.yaml)$",
-                                schema_view.without_ui(cache_timeout=0),
-                                name="schema-json",
-                            ),
-                            re_path(
-                                r"^swagger/$",
-                                schema_view.with_ui("swagger", cache_timeout=0),
-                                name="schema-swagger-ui",
-                            ),
-                            re_path(
-                                r"^redoc/$",
-                                schema_view.with_ui("redoc", cache_timeout=0),
-                                name="schema-redoc",
-                            ),
-                        ]
-                    ),
-                ),
-            ]
-        ),
-    ),
+    path('o/', include('oauth2_provider.urls', namespace="oauth2_provider")),
+    path("api/", include("accounts.urls", namespace="accounts")),
+    path("api/", include("chats.urls", namespace="chats")),
+
+    path("api/docs/", schema_view.with_ui("swagger", cache_timeout=0),
+         name="schema-swagger-ui", ),
+    re_path(r"^api/docs/redoc/$", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc", ),
+    # path(
+    #     "api/",
+    #     include(
+    #         [
+    #             # path("accounts/", include("accounts.urls")),
+    #             path("chats/", include("chats.api.urls")),
+    #             path(
+    #                 "docs/",
+    #                 include(
+    #                     [
+    #                         re_path(
+    #                             r"^swagger(?P<format>\.json|\.yaml)$",
+    #                             schema_view.without_ui(cache_timeout=0),
+    #                             name="schema-json",
+    #                         ),
+    #                         re_path(
+    #                             r"^swagger/$",
+    #                             schema_view.with_ui("swagger", cache_timeout=0),
+    #                             name="schema-swagger-ui",
+    #                         ),
+    #                         re_path(
+    #                             r"^redoc/$",
+    #                             schema_view.with_ui("redoc", cache_timeout=0),
+    #                             name="schema-redoc",
+    #                         ),
+    #                     ]
+    #                 ),
+    #             ),
+    #         ]
+    #     ),
+    # ),
 ]
 
 if settings.DEBUG:

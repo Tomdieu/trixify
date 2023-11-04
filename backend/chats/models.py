@@ -184,13 +184,21 @@ class Seen(models.Model):
 class MessageReactions(models.Model):
     """MessageReactions Model"""
 
+    # REACTIONS_EMOJI = (
+    #     ("like", _("Like")),
+    #     ("love", _("Love")),
+    #     ("haha", _("Haha")),
+    #     ("wow", _("Wow")),
+    #     ("sad", _("Sad")),
+    #     ("angry", _("Angry")),
+    # )
     REACTIONS_EMOJI = (
-        ("like", _("Like")),
-        ("love", _("Love")),
-        ("haha", _("Haha")),
-        ("wow", _("Wow")),
-        ("sad", _("Sad")),
-        ("angry", _("Angry")),
+        ("LIKE", "👍"),
+        ("LOVE", "😍"),
+        ("HAHA", "🤣"),
+        ("WOW", "😲"),
+        ("SAD", "😓"),
+        ("ANGRY", "😡"),
     )
     message = models.ForeignKey(
         Message, related_name="reactions", on_delete=models.CASCADE

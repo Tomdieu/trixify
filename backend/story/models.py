@@ -19,6 +19,9 @@ class Story(models.Model):
     def __str__(self) -> str:
         return f"{self.user} - Story"
 
+    class Meta:
+        verbose_name_plural = 'stories'
+
 
 class StoryViewer(models.Model):
     story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name="views")
@@ -29,3 +32,6 @@ class StoryViewer(models.Model):
 
     def __str__(self):
         return f"{self.user} view {self.story}"
+
+    class Meta:
+        verbose_name_plural = 'story viewers'

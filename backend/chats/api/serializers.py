@@ -12,6 +12,7 @@ from chats.models import (
     MessageType,
     FileMessage,
     TextMessage,
+    StoryReplyMessage, LinkMessage,MessageReactions
 )
 
 from rest_polymorphic.serializers import PolymorphicSerializer
@@ -103,6 +104,18 @@ class FileMessageSerializer(serializers.ModelSerializer):
         return obj.file.storage.size()
 
 
+class LinkMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LinkMessage
+        fields = '__all__'
+
+
+class StoryReplyMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StoryReplyMessage
+        fields = '__all__'
+
+
 class TextMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = TextMessage
@@ -114,4 +127,14 @@ class MessageTypePolymorphicSerializer(PolymorphicSerializer):
         MessageType: MessageTypeSerializer,
         FileMessage: FileMessageSerializer,
         TextMessage: TextMessageSerializer,
+        LinkMessage: LinkMessageSerializer,
+        StoryReplyMessage: StoryReplyMessageSerializer
     }
+
+
+class MessageReactionsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MessageReactions
+        fields = '__all__'
+
