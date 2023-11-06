@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  trixify:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    image: trixify:1.0
+    restart: always
+    networks:
+      - trixify
+networks:
+  trixify:
