@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: trixify-ingress
+spec:
+  rules:
+    - host: trixify.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: trixify-service
+                port:
+                  number: 80

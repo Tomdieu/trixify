@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trixify-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trixify
+  template:
+    metadata:
+      labels:
+        app: trixify
+    spec:
+      containers:
+        - name: trixify
+          image: trixify:1.0
+          ports:
+            - containerPort: 8080
