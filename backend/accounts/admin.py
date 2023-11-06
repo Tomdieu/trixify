@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as _UserAdmin
-from .models import Profile, UserSocialLinks
+from .models import Profile, UserSocialLinks,UserLoginActivity,UserSessions
 
 from django.contrib.auth import get_user_model
 
@@ -30,7 +30,7 @@ class UserAdmin(_UserAdmin):
         (None, {"fields": ("email", "password")}),
         (
             "Personal info",
-            {"fields": ("username", "phone_number", "first_name", "last_name")},
+            {"fields": ("username", "phone_number", "first_name", "last_name","is_online","last_online")},
         ),
         (
             "Permissions",
@@ -64,8 +64,10 @@ class UserAdmin(_UserAdmin):
     )
     list_per_page = 25
     search_fields = ("username", "first_name", "last_name", "email", "phone_number")
-    list_display = ("username", "email", "first_name", "last_name", "is_staff")
+    list_display = ("username", "email", "first_name", "last_name", "is_staff","is_online","last_online")
     list_filter = ("is_staff", "is_superuser", "is_active", "groups")
+
+    readonly_fields = ['last_online']
 
     inlines = [ProfileInline]
 
@@ -81,3 +83,11 @@ class ProfileAdmin(admin.ModelAdmin):
 class UserSocialLinksAdmin(admin.ModelAdmin):
     list_per_page = 25
     list_display = ['id','label','url']
+
+@admin.register(UserLoginActivity)
+class UserLoginActivityAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(UserSessions)
+class UserSessionsAdmin(admin.ModelAdmin):
+    pass

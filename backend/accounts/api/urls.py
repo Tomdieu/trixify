@@ -10,10 +10,10 @@ router.register("profile", views.UserProfileViewSet, basename="profile")
 router.register("login", views.LoginViewSet, basename="login")
 router.register("register", views.RegisterViewSet, basename="register")
 router.register("user-links", views.UserSocialLinksViewSet, basename='user-links')
-router.register('refresh-token',views.TokenRefreshView,basename='refresh-token')
+# router.register("logout",views.LogoutView)
 
 urlpatterns = [
-    # path("rtoken/", views.TokenRefreshView.as_view({'post': 'create'}))
+    path("logout/", views.LogoutView.as_view())
 ]
 
 urlpatterns += router.urls

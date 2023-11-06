@@ -11,6 +11,8 @@ class User(AbstractUser):
         _("Phone number"), max_length=30, blank=True, null=True, unique=True
     )
     email = models.EmailField(_("email address"), unique=True)
+    is_online = models.BooleanField(default=False,help_text=_("This is to check if a user is online or not."))
+    last_online = models.DateTimeField(blank=True,null=True,help_text=_("Last time at which the user logged out"))
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
@@ -40,6 +42,10 @@ class UserSocialLinks(models.Model):
     def __str__(self):
         return f"{self.profile}: {self.label} - {self.url}"
 
+    class Meta:
+
+        verbose_name_plural = _("user social links")
+
 
 class UserLoginActivity(models.Model):
     user = models.ForeignKey(
@@ -51,9 +57,12 @@ class UserLoginActivity(models.Model):
 
     def __str__(self):
         return f"{self.user} : login at  {self.created_at} at position : [{self.lat},{self.lng}]"
+    class Meta:
 
+        verbose_name_plural = _("user login activities")
 
 class UserSessions(models.Model):
+
     user = models.ForeignKey(User, related_name="sessions", on_delete=models.CASCADE)
     user_agent = models.CharField(max_length=255, blank=True, null=True)
     browser = models.CharField(max_length=255, blank=True, null=True)
@@ -65,3 +74,7 @@ class UserSessions(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.browser} {self.os} session"
+
+    class Meta:
+
+        verbose_name_plural = _("user sessions")
