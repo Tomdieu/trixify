@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import (
     Chat,
     Conversation,
+    ConversationUser,
     GroupConversation,
     GroupMember,
     Message,
@@ -44,6 +45,7 @@ class GroupMemberInline(admin.TabularInline):
 @admin.register(GroupConversation)
 class GroupConversationAdmin(admin.ModelAdmin):
     list_display = ("name", "description", "created_by")
+    readonly_fields = ['is_group']
 
     inlines = [GroupMemberInline]
     list_per_page = 25
@@ -54,10 +56,19 @@ class GroupMemberAdmin(admin.ModelAdmin):
     list_display = ("user", "group", "is_active", "is_admin", "joined_on")
     list_per_page = 25
 
+class ConversationUserInline(admin.TabularInline):
+
+    model = ConversationUser
+    extra = 2
+    max_num = 2
+
+
 @admin.register(Conversation)
 class ConversationAdmin(admin.ModelAdmin):
     list_display = ["id"]
     list_per_page = 25
+    readonly_fields = ['is_group']
+    inlines = [ConversationUserInline]
 
 
 class MessageTypeChildAdmin(PolymorphicChildModelAdmin):
