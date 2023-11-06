@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-oucgf5e2*wd0$j%oo0_4-c*5@1df&f#w90a*grdi@(04-yo*1h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -46,17 +46,19 @@ INSTALLED_APPS = [
     "posts",
     "story",
     "shorts",
+    "contact",
     # Third party apps
     "corsheaders",
     "drf_yasg",
     "rest_framework",
+    "rest_framework.authtoken",
     "polymorphic",
     "nested_admin",
     "phonenumber_field",
     # OAuth
     "oauth2_provider",
-    "social_django",
-    "drf_social_oauth2",
+    # "social_django",
+    # "drf_social_oauth2",
 ]
 
 MIDDLEWARE = [
@@ -68,6 +70,10 @@ MIDDLEWARE = [
     'oauth2_provider.middleware.OAuth2TokenMiddleware',
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
+
+    # Custom Middleware
+    "accounts.middleware.UpdateUserOnlineMiddleware",
 ]
 
 ROOT_URLCONF = "backend.urls"
@@ -83,27 +89,13 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "social_django.context_processors.backends",
-                "social_django.context_processors.login_redirect",
+                # "social_django.context_processors.backends",
+                # "social_django.context_processors.login_redirect",
             ],
         },
     },
 ]
 
-AUTHENTICATION_BACKENDS = (
-    'oauth2_provider.backends.OAuth2Backend',
-    # Others auth providers (e.g. Facebook, OpenId, etc)
-
-    # Google OAuth2
-    'social_core.backends.google.GoogleOAuth2',
-    # GitHub OAuth2
-    'social_core.backends.github.GithubOAuth2',
-    # drf-social-oauth2
-    'drf_social_oauth2.backends.DjangoOAuth2',
-    # Django
-    'django.contrib.auth.backends.ModelBackend',
-
-)
 
 WSGI_APPLICATION = "backend.wsgi.application"
 ASGI_APPLICATION = "backend.asgi.application"
@@ -154,25 +146,32 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-STATIC_ROOT = BASE_DIR / 'static_root'
+STATIC_ROOT = BASE_DIR / 'static_root/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Google configuration
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '<your app id goes here>'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '<your app secret goes here>'
-# Define SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE to get extra permissions from Google.
-SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-    'https://www.googleapis.com/auth/userinfo.email',
-    'https://www.googleapis.com/auth/userinfo.profile',
-]
 
-# GitHub configuration
-SOCIAL_AUTH_GITHUB_KEY = ""  # env('SOCIAL_AUTH_GITHUB_KEY',"")
-SOCIAL_AUTH_GITHUB_SECRET = ""  # env("SOCIAL_AUTH_GITHUB_SECRET")
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
+
+# # Google configuration
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '<your app id goes here>'
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '<your app secret goes here>'
+# # Define SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE to get extra permissions from Google.
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+#     'https://www.googleapis.com/auth/userinfo.email',
+#     'https://www.googleapis.com/auth/userinfo.profile',
+# ]
+#
+# # GitHub configuration
+# SOCIAL_AUTH_GITHUB_KEY = ""  # env('SOCIAL_AUTH_GITHUB_KEY',"")
+# SOCIAL_AUTH_GITHUB_SECRET = ""  # env("SOCIAL_AUTH_GITHUB_SECRET")
 
 # Cors Configuration
 CORS_ORIGIN_ALLOW_ALL = True
@@ -197,7 +196,30 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny'
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-        'drf_social_oauth2.authentication.SocialAuthentication',
+        # 'drf_social_oauth2.authentication.SocialAuthentication',
     ),
 }
+
+# Auth Backends
+
+# AUTHENTICATION_BACKENDS = (
+
+#     # Google OAuth2
+#     'social_core.backends.google.GoogleOAuth2',
+#     # GitHub OAuth2
+#     'social_core.backends.github.GithubOAuth2',
+
+#     # drf-social-oauth2
+#     'drf_social_oauth2.backends.DjangoOAuth2',
+#     # Django
+#     'django.contrib.auth.backends.ModelBackend',
+
+# )
+
+
+LOGIN_URL='/admin/accounts/login/'
+LOGOUT_URL='/api/accounts/logout/'

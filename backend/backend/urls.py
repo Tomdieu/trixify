@@ -48,11 +48,13 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin/", admin.site.urls),
     re_path(r"^_nested_admin/", include("nested_admin.urls")),
-    re_path(r"^auth/", include("drf_social_oauth2.urls", namespace="drf")),
+    
+    # path("auth/", include("drf_social_oauth2.urls", namespace="drf")),
     path('o/', include('oauth2_provider.urls', namespace="oauth2_provider")),
+    #
+    #
     path("api/", include("accounts.urls", namespace="accounts")),
     path("api/", include("chats.urls", namespace="chats")),
-
     path("api/docs/", schema_view.with_ui("swagger", cache_timeout=0),
          name="schema-swagger-ui", ),
     re_path(r"^api/docs/redoc/$", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc", ),
