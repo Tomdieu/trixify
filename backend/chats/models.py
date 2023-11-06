@@ -1,6 +1,8 @@
+from collections.abc import Iterable
 from django.db import models
 
 from django.contrib.auth import get_user_model
+from django.db.utils import DEFAULT_DB_ALIAS
 
 from polymorphic.models import PolymorphicModel
 
@@ -9,6 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 
 from story.models import Story
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 
@@ -26,7 +29,45 @@ class Chat(PolymorphicModel):
 class Conversation(Chat):
     """Conversation model"""
 
-    users = models.ManyToManyField(User, related_name="conversations")
+    users = models.ManyToManyField(User, through="ConversationUser", related_name="participants")
+
+    def __str__(self):
+        users = []
+        for user in self.users.all():
+            users.append(user)
+        print(users)
+        return f"Conversation : {self.id}"
+
+
+class ConversationUser(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="conversations")
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name="participants")
+
+    def __str__(self) -> str:
+        return f"User : {self.user} Conversation : {self.conversation}"
+
+    class Meta:
+        unique_together = (("user", "conversation"),)
+
+    def clean(self) -> None:
+        super().clean()
+
+        # Check if they are more than two users in a particular conversation
+
+        # conversation_users = ConversationUser.objects.filter(conversation = self.conversation)
+
+        # if len(conversation_users) >= 2 :
+        #     raise ValidationError({"user":"Conversation full"})
+
+        # Check if a user is to be added two times in a same conversation
+
+        user_double = ConversationUser.objects.filter(conversation=self.conversation, user=self.user)
+
+        if user_double.exists():
+            raise ValidationError({"user": "User already present in conversation"})
+
+        # Check if the user we want to create a conversation is not found in another
+        # conversation with the user to be inserted in the current conversation
 
 
 class GroupConversation(Chat):
@@ -39,23 +80,28 @@ class GroupConversation(Chat):
         User, related_name="created_conversations", on_delete=models.CASCADE
     )
     users = models.ManyToManyField(
-        User, through="GroupMember", related_name="group_conversations"
+        User, through="GroupMember", related_name="members"
     )
 
     def __str__(self):
         return f"{self.name}"
 
     def add_group_member(self, user: User):
-        member = self.group_members.filter(user=user)
+        member = self.members.filter(user=user)
         if not member.exists():
             GroupMember.objects.create(user=user, group=self)
+
+    def remove_group_member(self, user_id):
+        members = self.members.filter(user_id=user_id)
+        if members.exists():
+            members.delete()
 
     @property
     def last_message(self):
         return self.messages.last()
 
     def set_member_as_admin(self, user: User):
-        member: list[GroupMember] = self.group_members.filter(user=user)
+        member = self.members.filter(user=user)
         if member.exists():
             _member: GroupMember = member.get(user=user)
             _member.is_admin = True
@@ -151,20 +197,6 @@ class Message(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def clean_fields(self, exclude=None):
-        super().clean_fields(exclude)
-        if not self.conversation.users.filter(
-            user=self.sender, is_active=True
-        ).exists():
-            raise ValidationError(
-                {
-                    "sender": _(
-                        "Sorry This user can not sent message in this group because he does not belong to the "
-                        "discussion or has been remove"
-                    )
-                }
-            )
-
     def __str__(self) -> str:
         return f"{self.sender} - {self.conversation} - {self.content}"
 
@@ -184,14 +216,6 @@ class Seen(models.Model):
 class MessageReactions(models.Model):
     """MessageReactions Model"""
 
-    # REACTIONS_EMOJI = (
-    #     ("like", _("Like")),
-    #     ("love", _("Love")),
-    #     ("haha", _("Haha")),
-    #     ("wow", _("Wow")),
-    #     ("sad", _("Sad")),
-    #     ("angry", _("Angry")),
-    # )
     REACTIONS_EMOJI = (
         ("LIKE", "👍"),
         ("LOVE", "😍"),
