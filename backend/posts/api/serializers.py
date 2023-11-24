@@ -12,11 +12,19 @@ class PostDetailSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id','title','content','created_by','updated','created_at']
 
-class PostCreateSerializer(serializers.ModelSerializer):
+class PostMediaCreateSerializer(serializers.ModelSerializer):
+
     class Meta:
 
+        model = PostMedia
+        fields = ['file']
+
+
+class PostCreateSerializer(serializers.ModelSerializer):
+    medias = PostMediaCreateSerializer(many=True)
+    class Meta:
         model = Post
-        fields = ['id','title','content','updated','created_at']
+        fields = ['id','title','content','updated','created_at','medias']
 
     
 class PostSerializer(serializers.ModelSerializer):
@@ -26,12 +34,6 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ['id','title','content','created_by','updated','created_at']
 
-class PostMediaCreateSerializer(serializers.ModelSerializer):
-
-    class Meta:
-
-        model = PostMedia
-        fields = ['file']
 
 class PostMediaSerializer(serializers.ModelSerializer):
 
@@ -43,16 +45,31 @@ class PostCommentCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PostComment
-        fields = ['parent','content','created_by','created_at']
+        fields = ['parent','content']
+
+class PostCommentUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PostComment
+        fields = ['content']
+
 
 
 class PostCommentSerializer(serializers.ModelSerializer):
+
+    # parent = 
 
     class Meta:
         model = PostComment
         fields = ['post','parent','content','created_by','created_at']
 
 class PostReactionCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PostReactions
+        fields = ['reaction','post']
+
+class PostReactionUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PostReactions
@@ -71,6 +88,14 @@ class CommentReactionCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentReactions
         fields = ['reaction','comment']
+
+class CommentReactionUpdateSerializer(serializers.ModelSerializer):
+   
+    class Meta:
+        model = CommentReactions
+        fields = ['reaction']
+
+
 
 
 class CommentReactionSerializer(serializers.ModelSerializer):
