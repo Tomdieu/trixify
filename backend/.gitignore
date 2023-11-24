@@ -40,3 +40,8 @@ bower_components/
 
 # Local development files
 db.sqlite3
+
+commands.txt
+
+node_modules
+/node_modules/
