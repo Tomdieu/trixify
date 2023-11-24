@@ -1,0 +1,54 @@
+{% load compress %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {% block title %}
+
+    <title>Trixify</title>
+
+    {% endblock %}
+
+    {% compress css %}
+    <link rel="stylesheet" href="{% static 'src/output.css' %}">
+    {% endcompress %}
+
+    {% block css %}
+
+    {% endblock css %}
+
+    <link rel="stylesheet" href="{% static 'css/nprogress.min.css' %}">
+    
+    
+    {% tailwindcss %}
+</head>
+<body>
+    {% block content %}
+
+    {% endblock content %}
+    <script src="{% static 'js/nprogress.min.js' %}"></script>
+    <script src="{% static 'js/alpine.cdn.min.js' %}"></script>
+    <script src="{% static 'js/htmx.min.js' %}"></script>
+    <script src="{% static 'js/_hyperscript.min.js' %}"></script>
+
+
+    <script>
+        if (tailwind) {
+            tailwind.config = {
+                content: ["./**/*.{html,js}"],
+                theme: {
+                    extend: {
+                    }
+                },
+                plugins: [],
+            }
+        }
+    </script>
+    {% block js %}
+
+    {% endblock js %}
+</body>
+</html>
