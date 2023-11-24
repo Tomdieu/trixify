@@ -10,10 +10,10 @@ User = get_user_model()
 class Music(models.Model):
     title = models.CharField(max_length=100)
     artist = models.CharField(max_length=100)
-    album = models.CharField(max_length=100)
-    genre = models.CharField(max_length=100)
+    album = models.CharField(max_length=100,blank=True,null=True)
+    genre = models.CharField(max_length=100,blank=True,null=True)
     year = models.IntegerField()
-    track_number = models.IntegerField()
+    track_number = models.IntegerField(blank=True,null=True)
     file = models.FileField(upload_to="music/")
     owner = models.ForeignKey(User, related_name="created_music", on_delete=models.CASCADE)
 
