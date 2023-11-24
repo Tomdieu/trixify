@@ -13,6 +13,7 @@ class User(AbstractUser):
     email = models.EmailField(_("email address"), unique=True)
     is_online = models.BooleanField(default=False,help_text=_("This is to check if a user is online or not."))
     last_online = models.DateTimeField(blank=True,null=True,help_text=_("Last time at which the user logged out"))
+    avatar = models.ImageField(upload_to="avatars/", null=True, blank=True)
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
@@ -23,7 +24,6 @@ class User(AbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
     bio = models.TextField(null=True, blank=True)
-    avatar = models.ImageField(upload_to="avatars/", null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
