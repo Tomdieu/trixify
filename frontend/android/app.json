@@ -1,13 +1,39 @@
 {
   "expo": {
-    "scheme": "acme",
+    "scheme": "myapp",
+    "version":"1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
     "web": {
-      "bundler": "metro"
+      "bundler": "metro",
+      "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
       "expo-router"
     ],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    
+    "ios": {
+      "supportsTablet": true
+    },
     "name": "trixify",
-    "slug": "trixify"
+    "slug": "trixify",
+    "experiments":{
+      "typeRoutes":true,
+      "tsconfigPaths":true
+    }
   }
 }
