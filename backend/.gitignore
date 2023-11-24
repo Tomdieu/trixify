@@ -30,6 +30,9 @@ media/
 # Dependency directories
 node_modules/
 bower_components/
+package-lock.json
+package.json
+
 
 # Editor/IDE-specific files
 .vscode/
@@ -45,3 +48,5 @@ commands.txt
 
 node_modules
 /node_modules/
+
+help
