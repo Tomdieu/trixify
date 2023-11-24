@@ -26,11 +26,9 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver([user_logged_in])
 def set_user_online(sender, user, request, **kwargs):
-    print("User : ", user, " logged in")
+
     user.is_online = True
     user.save()
-
-    print(dir(request))
 
     UserLoginActivity.objects.create(user=user)
 
