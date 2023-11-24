@@ -1,30 +1,43 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, StatusBar } from 'react-native'
 import React from 'react'
-import { Link } from "expo-router";
+import { useRouter } from "expo-router";
+
+import { Button, HStack } from "@react-native-material/core"
+
+import { FontAwesome } from "@expo/vector-icons"
 
 type Props = {}
 
 const Root = (props: Props) => {
-  return (
-    <View style={styles.container}>
-      <Text style={{fontWeight:"800",fontSize:30}}>Welcome To Trixify</Text>
-      <Link href={'/login'}>
-      <TouchableOpacity>
-        <View style={{backgroundColor:"red",borderRadius:9,paddingHorizontal:10,paddingVertical:10}}>
 
-        <Text>Next</Text>
+  const router = useRouter()
+
+  return (
+    <SafeAreaView style={styles.container}>
+
+      <View style={{ flex: 1, paddingHorizontal: 8, justifyContent: "center", }}>
+        <View style={{flex:1,justifyContent:"center"}}>
+          <Text className='font-bold text-4xl'>Welcome To Trixify</Text>
+          <Text style={{ fontWeight: "800", fontSize: 30, textAlign: "left" }}>Get Started</Text>
+          <Text className='text-xl font-bold'>By @ivantom</Text>
         </View>
-      </TouchableOpacity>
-      </Link>
-    </View>
+
+        <HStack spacing={8} style={{ marginVertical: 8 }}>
+          <Button style={{ flex: 1}} title={'Register'} color='#5a8' titleStyle={{ color: "#fff"}} elevation={8} onPress={() => { router.push('/register') }} />
+          <Button style={{ flex: 1}} onPress={() => { router.push('/login') }} title={'Login'} color='#1c71d8' trailing={<FontAwesome name='share' color={"#ffff"} />} />
+        </HStack>
+
+      </View>
+    </SafeAreaView>
+
   )
 }
 
 export default Root
 
 const styles = StyleSheet.create({
-  container:{
-    flex:1,
-    padding:5
+  container: {
+    flex: 1,
+    marginTop: StatusBar.currentHeight
   }
 })

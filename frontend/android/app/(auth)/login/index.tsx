@@ -1,13 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import LoginForm from '../../../components/auth/loginForm'
+import LoginForm from '../../../components/auth/LoginForm'
+import { StatusBar } from 'react-native'
 
 const LoginScreen = () => {
   return (
-    <View>
-      <Text>LoginScreen</Text>
+    <SafeAreaView style={{ flex: 1, marginTop:StatusBar.currentHeight}} className='bg-blue-50'>
       <LoginForm/>
-    </View>
+    </SafeAreaView>
   )
 }
 
