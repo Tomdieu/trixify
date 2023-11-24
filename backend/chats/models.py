@@ -1,8 +1,6 @@
-from collections.abc import Iterable
 from django.db import models
 
 from django.contrib.auth import get_user_model
-from django.db.utils import DEFAULT_DB_ALIAS
 
 from polymorphic.models import PolymorphicModel
 
@@ -10,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from django.core.exceptions import ValidationError
 
+from chats.signal import user_added_to_group_conversation
 from story.models import Story
 from django.utils.translation import gettext_lazy as _
 
@@ -24,6 +23,9 @@ class Chat(PolymorphicModel):
     is_group = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Chat : {self.id} Group : {self.is_group}"
 
 
 class Conversation(Chat):
@@ -70,7 +72,7 @@ class ConversationUser(models.Model):
         # conversation with the user to be inserted in the current conversation
 
 
-class GroupConversation(Chat):
+class Group(Chat):
     """Group Conversation model"""
 
     name = models.CharField(max_length=100)
@@ -90,6 +92,7 @@ class GroupConversation(Chat):
         member = self.members.filter(user=user)
         if not member.exists():
             GroupMember.objects.create(user=user, group=self)
+            user_added_to_group_conversation.send(sender=self.__class__, user=user, group_conversation=self)
 
     def remove_group_member(self, user_id):
         members = self.members.filter(user_id=user_id)
@@ -117,7 +120,7 @@ class GroupMember(models.Model):
         User, related_name="group_members", on_delete=models.CASCADE
     )
     group = models.ForeignKey(
-        GroupConversation, related_name="group_members", on_delete=models.CASCADE
+        Group, related_name="group_members", on_delete=models.CASCADE
     )
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -144,11 +147,17 @@ class MessageType(PolymorphicModel):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__} : {self.id}"
+
 
 class TextMessage(MessageType):
     text = models.CharField(max_length=98)
 
     def __str__(self) -> str:
+        return f"{self.text}"
+    
+    def __repr__(self) -> str:
         return f"{self.text}"
 
 
@@ -156,40 +165,40 @@ class FileMessage(MessageType):
     """FileMessageType Model"""
 
     text = models.TextField(blank=True, null=True)
-    file = models.FileField(upload_to="message_types/")
+    file = models.FileField(upload_to="message_file/")
 
     def get_file_type(self):
         """
-        This functions get the file type of a file
+        These functions get the file type of file
         """
         return self.file.name.split(".")[-1]
 
     def __str__(self) -> str:
-        return f"{self.text}"
+        return f"Text : {self.text} File : {self.file.name}"
+    
+    def __repr__(self) -> str:
+        return f"Text : {self.text} File : {self.file.name}"
 
 
 class StoryReplyMessage(MessageType):
     story = models.ForeignKey(Story, on_delete=models.CASCADE)
+    text = models.TextField(blank=True, null=True)
+    file = models.FileField(upload_to="message_file/")
 
     def __str__(self):
-        return f"{self.story}"
-
-
-class LinkMessage(MessageType):
-    url = models.URLField()
-
-    def __str__(self):
-        return f"{self.url}"
+        return f"Story : {self.story} Text : {self.text} File : {self.file.name}"
+    
+    def __repr__(self):
+        return f"Story : {self.story} Text : {self.text} File : {self.file.name}"
 
 
 class Message(models.Model):
     """Message Model"""
 
-    conversation = models.ForeignKey(
+    chat = models.ForeignKey(
         Chat, related_name="messages", on_delete=models.CASCADE
     )
     sender = models.ForeignKey(User, related_name="messages", on_delete=models.CASCADE)
-    file = models.FileField(upload_to="files/", null=True, blank=True)
     content = models.ForeignKey(MessageType, on_delete=models.CASCADE)
     parent_message = models.ForeignKey(
         "self", on_delete=models.CASCADE, null=True, blank=True, related_name="replies"
@@ -198,7 +207,7 @@ class Message(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self) -> str:
-        return f"{self.sender} - {self.conversation} - {self.content}"
+        return f"{self.sender} - {self.chat} - {self.content}"
 
 
 class Seen(models.Model):

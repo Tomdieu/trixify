@@ -4,7 +4,7 @@ from .models import (
     Chat,
     Conversation,
     ConversationUser,
-    GroupConversation,
+    Group,
     GroupMember,
     Message,
     Seen,
@@ -12,7 +12,6 @@ from .models import (
     FileMessage,
     TextMessage,
     StoryReplyMessage,
-    LinkMessage,
 MessageReactions
 )
 
@@ -32,7 +31,7 @@ class ModelChatAdmin(PolymorphicChildModelAdmin):
 @admin.register(Chat)
 class ChatAdmin(PolymorphicParentModelAdmin):
     base_model = Chat
-    child_models = (Conversation, GroupConversation)
+    child_models = (Conversation, Group)
     list_filter = [PolymorphicChildModelFilter]
     list_display = ["id", "created_at"]
     list_per_page = 25
@@ -42,8 +41,8 @@ class GroupMemberInline(admin.TabularInline):
     extra = 1
 
 
-@admin.register(GroupConversation)
-class GroupConversationAdmin(admin.ModelAdmin):
+@admin.register(Group)
+class GroupAdmin(admin.ModelAdmin):
     list_display = ("name", "description", "created_by")
     readonly_fields = ['is_group']
 
@@ -78,7 +77,7 @@ class MessageTypeChildAdmin(PolymorphicChildModelAdmin):
 @admin.register(MessageType)
 class MessageTypeAdmin(PolymorphicParentModelAdmin):
     base_model = MessageType
-    child_models = [FileMessage, TextMessage, StoryReplyMessage, LinkMessage]
+    child_models = [FileMessage, TextMessage, StoryReplyMessage]
     list_filter = (PolymorphicChildModelFilter,)
     list_display = ["id", "created_at"]
     list_per_page = 25
@@ -96,12 +95,6 @@ class TextMessageAdmin(MessageTypeChildAdmin):
     list_display = ["id", "text", "created_at"]
 
 
-@admin.register(LinkMessage)
-class LinkMessageAdmin(MessageTypeChildAdmin):
-    base_model = LinkMessage
-    list_display = ['id','url','created_at']
-    list_per_page = 25
-
 @admin.register(StoryReplyMessage)
 class StoryReplyMessageAdmin(admin.ModelAdmin):
     list_display = ['id','story','created_at']
@@ -110,9 +103,8 @@ class StoryReplyMessageAdmin(admin.ModelAdmin):
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
     list_display = [
-        "conversation",
+        "chat",
         "sender",
-        "file",
         "content",
         "parent_message",
         "created_at",
