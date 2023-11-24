@@ -30,7 +30,7 @@ class UserAdmin(_UserAdmin):
         (None, {"fields": ("email", "password")}),
         (
             "Personal info",
-            {"fields": ("username", "phone_number", "first_name", "last_name","is_online","last_online")},
+            {"fields": ("username", "phone_number", "first_name", "last_name","avatar","is_online","last_online")},
         ),
         (
             "Permissions",
@@ -55,6 +55,7 @@ class UserAdmin(_UserAdmin):
                 "fields": (
                     "username",
                     "phone_number",
+                    "avatar",
                     "email",
                     "password1",
                     "password2",
