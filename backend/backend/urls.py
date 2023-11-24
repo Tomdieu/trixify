@@ -33,7 +33,10 @@ schema_view = get_schema_view(
     openapi.Info(
         title="Trixify",
         default_version="v0.0.1",
-        description="Trixify Api Docs",
+        description="""
+        <b>Trixify</b>
+        Trixify is a social app
+        """,
         contact=openapi.Contact(
             email="ivantomdio@gmail.com",
             name="ivantom",
@@ -48,49 +51,31 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin/", admin.site.urls),
     re_path(r"^_nested_admin/", include("nested_admin.urls")),
-    
     # path("auth/", include("drf_social_oauth2.urls", namespace="drf")),
-    path('o/', include('oauth2_provider.urls', namespace="oauth2_provider")),
+    path("o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
     #
     #
     path("api/", include("accounts.urls", namespace="accounts")),
     path("api/", include("chats.urls", namespace="chats")),
-    path("api/docs/", schema_view.with_ui("swagger", cache_timeout=0),
-         name="schema-swagger-ui", ),
-    re_path(r"^api/docs/redoc/$", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc", ),
-    # path(
-    #     "api/",
-    #     include(
-    #         [
-    #             # path("accounts/", include("accounts.urls")),
-    #             path("chats/", include("chats.api.urls")),
-    #             path(
-    #                 "docs/",
-    #                 include(
-    #                     [
-    #                         re_path(
-    #                             r"^swagger(?P<format>\.json|\.yaml)$",
-    #                             schema_view.without_ui(cache_timeout=0),
-    #                             name="schema-json",
-    #                         ),
-    #                         re_path(
-    #                             r"^swagger/$",
-    #                             schema_view.with_ui("swagger", cache_timeout=0),
-    #                             name="schema-swagger-ui",
-    #                         ),
-    #                         re_path(
-    #                             r"^redoc/$",
-    #                             schema_view.with_ui("redoc", cache_timeout=0),
-    #                             name="schema-redoc",
-    #                         ),
-    #                     ]
-    #                 ),
-    #             ),
-    #         ]
-    #     ),
-    # ),
+    path("api/", include("posts.urls", namespace="posts")),
+    path(
+        "api/docs/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    re_path(
+        r"^api/docs/redoc/$",
+        schema_view.with_ui("redoc", cache_timeout=0),
+        name="schema-redoc",
+    ),
+    re_path(
+        r"^swagger(?P<format>\.json|\.yaml)$",
+        schema_view.without_ui(cache_timeout=0),
+        name="schema-json",
+    )
+    
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
