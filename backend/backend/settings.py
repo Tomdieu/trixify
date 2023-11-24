@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-oucgf5e2*wd0$j%oo0_4-c*5@1df&f#w90a*grdi@(04-yo*1h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*",'192.168.58.1']
 
 # Application definition
 
@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "story",
     "shorts",
     "contact",
+    "friends",
     # Third party apps
     "corsheaders",
     "drf_yasg",
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     "polymorphic",
     "nested_admin",
     "phonenumber_field",
+    "compressor",
     # OAuth
     "oauth2_provider",
     # "social_django",
@@ -67,11 +69,10 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    'oauth2_provider.middleware.OAuth2TokenMiddleware',
+    "oauth2_provider.middleware.OAuth2TokenMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'corsheaders.middleware.CorsMiddleware',
-
+    "corsheaders.middleware.CorsMiddleware",
     # Custom Middleware
     "accounts.middleware.UpdateUserOnlineMiddleware",
 ]
@@ -81,7 +82,7 @@ ROOT_URLCONF = "backend.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -145,8 +146,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / "static/"]
+STATIC_ROOT = BASE_DIR / "static_root/"
 
-STATIC_ROOT = BASE_DIR / 'static_root/'
+MEDIA_URL = "/media/"
+
+MEDIA_ROOT = BASE_DIR / "media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -155,8 +160,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
 
@@ -176,30 +181,26 @@ CHANNEL_LAYERS = {
 # Cors Configuration
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_METHODS = (
-    'GET', 'POST', 'PUT', 'PATCH', 'DELETE', "OPTIONS"
-)
+CORS_ALLOW_METHODS = ("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
 
 # OAUTH 2 Provider
-OAUTH2_PROVIDER = {
-    'SCOPES': {
-        'read': 'Read scope',
-        'write': 'Write scope',
-        'groups': 'Access to your groups'
-    }
-}
+# OAUTH2_PROVIDER = {
+#     "SCOPES": {
+#         "read": "Read scope",
+#         "write": "Write scope",
+#         "groups": "Access to your groups",
+#     }
+# }
 
 # Rest framework
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASS': (
-        'rest_framework.permissions.AllowAny'
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    "DEFAULT_PERMISSION_CLASS": ("rest_framework.permissions.AllowAny"),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
+        # "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+        # "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
         # 'drf_social_oauth2.authentication.SocialAuthentication',
     ),
 }
@@ -221,5 +222,11 @@ REST_FRAMEWORK = {
 # )
 
 
-LOGIN_URL='/admin/accounts/login/'
-LOGOUT_URL='/api/accounts/logout/'
+LOGIN_URL = "/admin/accounts/login/"
+LOGOUT_URL = "/api/accounts/logout/"
+
+COMPRESS_ROOT = BASE_DIR / "static"
+
+# COMPRESS_ENABLED = True
+
+# STATICFILES_FINDERS = ("compressor.finders.CompressorFinder",)
