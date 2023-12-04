@@ -62,7 +62,7 @@ export interface ConversationType extends ChatType{
     is_online:boolean;
     self_chat:boolean;
     groups_in_common:any;
-    latest_message:any;
+    latest_message?:ChatMessageType;
 
 
 }
@@ -70,7 +70,7 @@ export interface ConversationType extends ChatType{
 export interface GroupType extends ChatType{
     id:number;
     users:GroupMemberType[],
-    latest_message?:MessageType;
+    latest_message?:ChatMessageType;
     messages:MessageType[];
     description:string;
     created_by:MininalUserType;
