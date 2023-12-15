@@ -29,15 +29,15 @@ export default function displayLatestMessage(chat:ChatType){
             
             if(message.content.resourcetype=="TextMessage"){
                 const textMessage = message.content as TextMessageType;
-                return message.sender.username+": "+textMessage.text;
+                return (conversation.self_chat? "You":message.sender.username)+": "+textMessage.text;
             }
             else if(message.content.resourcetype=="FileMessage"){
                 const fileMessage = message.content as FileMessageType;
-                return message.sender.username+": send a file";
+                return (conversation.self_chat? "You":message.sender.username)+": send a file";
             }
             else if(message.content.resourcetype=="StoryReplyMessage"){
                 const storyReplyMessage = message.content as FileMessageType;
-                return message.sender.username+": reply to a story";
+                return (conversation.self_chat? "You":message.sender.username)+": reply to a story";
             }
         }
     }
