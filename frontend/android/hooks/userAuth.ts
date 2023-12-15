@@ -21,19 +21,20 @@ export const useAuth = create<AuthState>((set, get) =>({
     isLoggedIn: false,
 
     setUser: async (user) => {
-        set({ user,isLoggedIn:true })
         await AsyncStorage.setItem('user', JSON.stringify(user))
+
+        set({ user,isLoggedIn:true })
     },
     setToken: async (token) => {
-        set({ token })
         await AsyncStorage.setItem('token', token)
+
+        set({ token })
     },
 
-    logout: () => {
+    logout: async () => {
         set({ user: null,token:null, isLoggedIn: false })
-        AsyncStorage.removeItem('user')
-        AsyncStorage.removeItem('token')
-        
+        await AsyncStorage.removeItem('user')
+        await AsyncStorage.removeItem('token')
     },
 
     loadData: async () => {
