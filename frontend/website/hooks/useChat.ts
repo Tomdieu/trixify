@@ -1,16 +1,23 @@
 import { create } from "zustand";
-import {ChatType, ConversationType, GroupType} from "@/types";
+import {ChatMessageType, ChatType, ConversationType, GroupType} from "@/types";
 
 interface ChatState {
     chats: ConversationType[]|GroupType[];
-    selectedChat?: ConversationType|GroupType;
+    selectedChat: ConversationType|GroupType|null;
     searchChats : ConversationType[]|GroupType[];
+
+
+    replyMessage:ChatMessageType|null;
+    setReplyMessage:(message:ChatMessageType|null)=>void;
+
 
     chatSearchOpen:boolean;
     chatMediaOpen:boolean;
 
-    setSelectedChat: (chat: ConversationType|GroupType) => void;
+    setSelectedChat: (chat: ConversationType|GroupType|null) => void;
     setChats: (chats: ConversationType[]|GroupType[]) => void;
+
+    setSearchChats:(chats:ConversationType[]|GroupType[])=>void;
 
     toggleChatSearch:()=>void;
     toggleMediaOpen:()=>void;
@@ -21,10 +28,16 @@ interface ChatState {
 
 export const useChatStore = create<ChatState>((set,get) => ({
     chats: [],
-    selectedChat: undefined,
+    selectedChat: null,
     searchChats:[],
     chatSearchOpen:false,
     chatMediaOpen:false,
+
+    replyMessage:null,
+
+    setReplyMessage:(message)=>{
+        set((state)=>({replyMessage:message}))
+    },
 
     toggleChatSearch:()=>{
         set((state)=>({chatSearchOpen:!get().chatSearchOpen}))
@@ -32,6 +45,10 @@ export const useChatStore = create<ChatState>((set,get) => ({
 
     toggleMediaOpen:()=>{
         set((state)=>({chatMediaOpen:!get().chatMediaOpen}))
+    },
+
+    setSearchChats:(chats)=>{
+        set((state)=>({searchChats:chats}))
     },
 
 

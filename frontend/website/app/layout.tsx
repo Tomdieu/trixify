@@ -8,6 +8,7 @@ import AppProvider from "@/provider/AppProvider";
 import NextUiProvider from "@/provider/NextUiProvider";
 import { Toaster as SchadToaster } from "@/components/ui/toaster"
 import ReactQueryProvider from "@/provider/ReactQueryProvider";
+import NextThemeProvider from "@/provider/NextThemeProvider";
 
 const poppins = localFont({
     src: [
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
         },
     },
     category: "Chat app",
-    icons: [{ rel: "icon", url: "https://trixify.vercel.app/logo.svg" },
+    icons: [{ rel: "icon", url: "/logo.svg" },
     { rel: "apple-touch-icon", url: "https://trixify.vercel.app/logo.svg" }],
     twitter: {
         card: 'summary_large_image',
@@ -73,19 +74,24 @@ export default async function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en" className={`${poppins.variable}`} suppressHydrationWarning={true}>
+        <html lang="en" className={`${poppins.variable}`} suppressHydrationWarning translate={"no"}>
 
             <body className="w-full h-full">
+            <NextThemeProvider>
+
                 <Toaster />
-                <NextTopLoader />
+                <NextTopLoader showSpinner={false}/>
                 <SchadToaster />
                 <NextUiProvider>
+
                     <AppProvider>
                         <ReactQueryProvider>
                         {children}
                         </ReactQueryProvider>
                     </AppProvider>
                 </NextUiProvider>
+            </NextThemeProvider>
+
 
             </body>
 

@@ -89,3 +89,15 @@
 .custom-scrollbar::-webkit-scrollbar-track {
   background-color: transparent; /* Color of the scrollbar track */
 }
+
+@layer components{
+  .dark-theme {
+    @apply dark:border border-stone-200 bg-white text-stone-950 shadow dark:border-stone-800 dark:bg-stone-950 dark:text-stone-50;
+  }
+  .text{
+    @apply text-stone-900 dark:text-stone-50
+  }
+  .link-style{
+    @apply transition-all ease-out border-stone-200 dark:border-stone-800 border-spacing-0.5 text-sm flex gap-2 items-center p-3 rounded-md cursor-pointer hover:bg-stone-900 hover:text-stone-50
+  }
+}
