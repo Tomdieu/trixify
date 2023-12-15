@@ -20,7 +20,7 @@ const StoryPreview = ({ user, isMine=false }: Props) => {
                     )}
                     <Avatar image={{ uri: user.avatar }} color='#2987FF' labelStyle={{ color: "#fff", fontSize: 20 }} label={user.username} />
                 </View>
-                <Text className='text-xs text-gray-500'>{isMine ? "Your Story":user.username}</Text>
+                <Text style={{fontFamily:'poppins-medium'}} className='text-xs text-gray-500'>{isMine ? "Your Story":user.username}</Text>
             </View>
         </TouchableOpacity>
     )
