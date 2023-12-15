@@ -24,8 +24,8 @@ export default function CreateChat(){
     return (
         <Dialog>
             <DialogTrigger asChild>
-            <NxButton isIconOnly={true} className={"p-2 rounded-md border"}>
-                <Plus color={"#BCC1CA"}/>
+            <NxButton isIconOnly={true} className={"p-2 rounded-md border dark:border-stone-600"}>
+                <Plus color={"#BCC1CA"} className={"dark:text-stone-50"}/>
             </NxButton>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
@@ -64,14 +64,7 @@ export default function CreateChat(){
                             className="col-span-3"
                         />
                     </div>
-                    {/*<AvatarGroup isBordered isDisabled className={"w-full"}>*/}
-                    {/*    <Avatar src="http://localhost:8000/media/avatars/avatar_2DWKpgm.png" />*/}
-                    {/*    <Avatar src="http://localhost:8000/media/avatars/avatar_2DWKpgm.png" />*/}
-                    {/*    <Avatar src="http://localhost:8000/media/avatars/avatar_2DWKpgm.png" />*/}
-                    {/*    <Avatar src="http://localhost:8000/media/avatars/avatar_2DWKpgm.png" />*/}
-                    {/*    <Avatar src="http://localhost:8000/media/avatars/avatar_2DWKpgm.png" />*/}
-                    {/*    <Avatar src="http://localhost:8000/media/avatars/avatar_2DWKpgm.png" />*/}
-                    {/*</AvatarGroup>*/}
+
                     <div className={"flex gap-0.5"}>
                         <Avatar className={"border"}>
                             <AvatarImage src="http://localhost:8000/media/avatars/avatar_2DWKpgm.png" />
@@ -82,9 +75,6 @@ export default function CreateChat(){
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                     </div>
-                    {/*<div className={"grid grid-cols-1 items-center gap-4 w-full"}>*/}
-                    {/*    */}
-                    {/*</div>*/}
                 </div>
                 <DialogFooter>
                     <Button type="submit">Create</Button>

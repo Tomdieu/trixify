@@ -1,20 +1,39 @@
 "use client"
 import {Textarea} from "@/components/ui/textarea"
-import {AlignLeft, FileMinus, Image, Laugh, MapPin, Mic, Paperclip, Plus, Scissors, Send, User, X} from "lucide-react";
-import {Button} from "@/components/ui/button";
+import {AlignLeft, FileMinus, Image, Laugh, MapPin, Mic, Paperclip, Plus, Send, X} from "lucide-react";
 import {Button as NxButton} from "@nextui-org/react";
 import {useEffect, useRef, useState} from "react";
 import {sideBarColors} from "@/constants/colors";
 import EmojiPicker from "emoji-picker-react"
+import {MotionDiv} from "@/components/motion";
+import {Variants} from "framer-motion";
+import {TextMessageType} from "@/types";
+import {useChatStore} from "@/hooks/useChat";
+import {createMessage} from "@/lib/actions/messages";
+
+const variants: Variants = {
+    active: {
+        opacity: 1,
+    },
+    inactive: {
+        opacity: 0,
+        transition: {duration: 1, ease: "backOut"},
+    }
+}
+
 export default function ChatInput() {
     const [open, setOpen] = useState(false)
 
     const [emojiOpen, setEmojiOpen] = useState(false);
 
-    const [value,setValue] = useState("")
+    const [value, setValue] = useState("")
+
+    const [file, setFile] = useState<File[]>()
+
+    const {selectedChat, replyMessage} = useChatStore()
+
 
     const ref = useRef<HTMLDivElement>(null);
-
 
 
     const handleButtonClick = (event: any) => {
@@ -44,46 +63,39 @@ export default function ChatInput() {
     }, [open]);
 
 
-    const toggleEmoji = () =>{
+    const toggleEmoji = () => {
         setEmojiOpen(!emojiOpen)
     }
 
+
+    const handleSendMessage = () => {
+        if (value) {
+            if (!file) {
+                const textMessage: TextMessageType = {text: value, resourcetype: "TextMessage"}
+                createMessage({chat: selectedChat?.id!, parent_message: replyMessage?.id, content: textMessage}).then(message => {
+                    console.log("Message Created  : ", message)
+                }).catch(err => {
+                    console.log("Error : ", err)
+                })
+            }
+        }
+    }
+
     return (
-        <div className={"w-full p-2 flex flex-col gap-2 border-t"}>
-            <div className={"gap-2 w-full hidden"}>
-                {/*<EmojiPicker />*/}
-                <Button variant={"outline"} size={"icon"}>
-                    <Laugh/>
-                </Button>
-                <Button variant={"outline"} size={"icon"}>
-                    <Scissors className={"-rotate-[90deg]"}/>
-                </Button>
-                <Button variant={"outline"} size={"icon"}>
-                    <Image/>
-                </Button>
-                <Button variant={"outline"} size={"icon"}>
-                    <Paperclip/>
-                </Button>
-                <Button variant={"outline"} size={"icon"}>
-                    <FileMinus/>
-                </Button>
-                <Button variant={"outline"} size={"icon"}>
-                    <AlignLeft/>
-                </Button>
-                <Button variant={"outline"} size={"icon"}>
-                    <User/>
-                </Button>
-            </div>
+        <div className={"w-full p-2 flex flex-col gap-2 border-t dark-theme shadow-none rounded-none"}>
+
             <div className={"flex gap-2 items-start w-full"}>
                 <div className={"relative"}>
                     <NxButton onClick={toggleEmoji} isIconOnly={true} className={"border p-2 rounded-full"}>
                         <Laugh color={sideBarColors.iconColor}/>
                     </NxButton>
-                    <div className={`absolute bottom-[55px] z-50 ease-in duration-1000 transition-all ${emojiOpen?"flex":"hidden"}`}>
-                        <EmojiPicker onEmojiClick={(data)=>{
-                            setValue((value)=>value+data.emoji)
+                    <div
+                        className={`absolute dark-theme bottom-[55px] z-50 ease-in duration-1000 transition-all ${emojiOpen ? "flex" : "hidden"}`}>
+                        <EmojiPicker onEmojiClick={(data) => {
+                            setValue((value) => value + data.emoji)
                         }}/>
-                        <NxButton onClick={toggleEmoji} isIconOnly className={"absolute right-1 top-1 p-1 rounded-full"}>
+                        <NxButton onClick={toggleEmoji} isIconOnly
+                                  className={"absolute right-1 top-1 p-1 rounded-full"}>
                             <X size={16} color={sideBarColors.iconColor}/>
                         </NxButton>
                     </div>
@@ -94,8 +106,11 @@ export default function ChatInput() {
                         <Plus color={sideBarColors.iconColor}
                               className={`ease-in-out duration-200 transition-all ${open ? 'rotate-45' : ""}`}/>
                     </NxButton>
-                    <div ref={ref}
-                         className={`${open ? "width-[fit-content] flex" : "w-0 hidden"} ease-in duration-1000 transition-all items-center gap-2 border px-3 py-2 rounded-full absolute bg-[#F7F8FA] bottom-[55px] z-50 `}>
+                    <MotionDiv
+                        ref={ref}
+                        variants={variants}
+                        animate={open ? "active" : "inactive"}
+                        className={`dark-theme flex items-center gap-2 border px-3 py-2 rounded-full absolute bg-[#F7F8FA] bottom-[55px] z-50 `}>
 
                         <NxButton onClick={() => {
                             console.log("Image")
@@ -115,17 +130,20 @@ export default function ChatInput() {
                                   className={"border p-2 rounded-full disabled:bg-gray-200"}>
                             <MapPin color={sideBarColors.iconColor}/>
                         </NxButton>
-                    </div>
+                    </MotionDiv>
                 </div>
-                <Textarea value={value} placeholder={"Type a message"} className={"focus:border-none outline-none text-gray-600 custom-scrollbar"} onChange={(e)=>setValue(e.target.value)} />
+                <Textarea value={value} placeholder={"Type a message"}
+                          className={"focus:border-none outline-none text-gray-600 custom-scrollbar"}
+                          onChange={(e) => setValue(e.target.value)}/>
                 <div>
-                    {value.length===0 ? (
+                    {value.length === 0 ? (
                         <NxButton aria-labelledby={"record"} isIconOnly={true} className={"border p-2 rounded-full"}>
 
                             <Mic color={sideBarColors.iconColor}/>
                         </NxButton>
-                    ):(
-                        <NxButton aria-labelledby={"send"} isIconOnly={true} className={"border p-2 rounded-full"}>
+                    ) : (
+                        <NxButton onClick={handleSendMessage} aria-labelledby={"send"} isIconOnly={true}
+                                  className={"border p-2 rounded-full"}>
                             <Send color={sideBarColors.iconColor}/>
                         </NxButton>
                     )}
