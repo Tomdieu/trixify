@@ -61,9 +61,14 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserMinimalSerializer(serializers.ModelSerializer):
 
+    bio = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ("id", "username","phone_number","avatar","is_online")
+        fields = ("id", "username","phone_number","avatar","is_online","bio")
+
+    def get_bio(self,user_obj)->str:
+        return user_obj.profile.bio or ""
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True, max_length=255)
