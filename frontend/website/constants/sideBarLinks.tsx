@@ -11,32 +11,32 @@ type SideBarLinksType = {
 export const sideBarLinks:SideBarLinksType[] = [
     {
         name:"chats",
-        icon:<MessageCircle color={"#1c71d8"} />,
+        icon:<MessageCircle  />,
         href:"/chats/"
     },
     {
         name:"Friends",
-        icon:<Users color={"#1c71d8"} />,
+        icon:<Users />,
         href:"/friends/"
     },
     {
         name:"Posts",
-        icon:<Package color={"#00999a"} />,
+        icon:<Package />,
         href:"/posts/"
     },
     {
         name:"Stories",
-        icon:<FileVideo color={"#FFCA28"}/>,
+        icon:<FileVideo />,
         href:"/story/"
     },
     {
         name:"Shorts",
-        icon:<Video color={"#E53935"}/>,
+        icon:<Video />,
         href:"/shorts/"
     },
     {
         name:"Musics",
-        icon:<Music color={"#D500F9"} />,
-        href:"/musics/"
+        icon:<Music  />,
+        href:"/music/"
     }
 ]
