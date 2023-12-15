@@ -36,7 +36,7 @@ const LoginForm = () => {
 
   const onSubmit = (data: loginSchemaType) => {
     console.log("Data : ", data);
-    fetch("http://192.168.8.106:8000/api/accounts/login/", {
+    fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/accounts/login/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
