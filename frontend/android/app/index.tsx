@@ -6,11 +6,26 @@ import { Button, HStack } from "@react-native-material/core"
 
 import { FontAwesome } from "@expo/vector-icons"
 
+import { SplashScreen } from 'expo-router';
+
 type Props = {}
+
+
+SplashScreen.preventAutoHideAsync()
 
 const Root = (props: Props) => {
 
   const router = useRouter()
+
+  const [isReady, setReady] = React.useState(false);
+  React.useEffect(() => {
+    // Perform some sort of async data or asset fetching.
+    setTimeout(() => {
+      // When all loading is setup, unmount the splash screen component.
+      SplashScreen.hideAsync();
+      setReady(true);
+    }, 1000);
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
