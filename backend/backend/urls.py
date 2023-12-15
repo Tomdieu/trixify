@@ -58,6 +58,7 @@ urlpatterns = [
     path("api/", include("accounts.urls", namespace="accounts")),
     path("api/", include("chats.urls", namespace="chats")),
     path("api/", include("posts.urls", namespace="posts")),
+    path("api/", include("contact.urls", namespace="contacts")),
     path(
         "api/docs/",
         schema_view.with_ui("swagger", cache_timeout=0),
