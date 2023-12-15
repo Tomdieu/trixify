@@ -31,6 +31,7 @@ export interface MininalUserType {
     phone_number: string,
     is_online: boolean,
     avatar?: string,
+    bio:string
 }
 
 export interface NextAuthUserType{
@@ -54,6 +55,14 @@ export interface ChatType {
     name:string;
     avatar:string;
     resourcetype:string;
+    messages:ChatMessageType[]
+}
+
+export interface GroupDetail {
+    id:number;
+    name:string;
+    members:string[];
+    avatar:string
 }
 
 export interface ConversationType extends ChatType{
@@ -61,28 +70,39 @@ export interface ConversationType extends ChatType{
     users:MininalUserType[];
     is_online:boolean;
     self_chat:boolean;
-    groups_in_common:any;
+    groups_in_common:GroupDetail[];
     latest_message?:ChatMessageType;
-
-
 }
 
 export interface GroupType extends ChatType{
     id:number;
     users:GroupMemberType[],
     latest_message?:ChatMessageType;
-    messages:MessageType[];
     description:string;
     created_by:MininalUserType;
     group_icon:string;
 
 }
 
+
+export interface MessageTypeCreate {
+    resourcetype: "TextMessage"|"StoryReplyMessage"|"PositionMessage"|"FileMessage"|string;
+}
+
+export interface TextMessageTypeCreate extends MessageTypeCreate {
+    text:string;
+}
+
+export interface FileMessageTypeCreate extends MessageTypeCreate {
+    text:string;
+    file:string;
+}
+
 export interface MessageType {
-    id:number;
-    created_at:string;
-    updated_at:string;
-    resourcetype:string;
+    id?:number;
+    created_at?:string;
+    updated_at?:string;
+    resourcetype: "TextMessage"|"StoryReplyMessage"|"PositionMessage"|"FileMessage"|string;
 }
 
 export interface TextMessageType extends MessageType {
@@ -101,6 +121,7 @@ export interface StoryReplyMessageType extends MessageType {
 }
 
 export interface ChatMessageType {
+    id:number;
     chat:ChatType;
     sender:MininalUserType;
     content:MessageType;
