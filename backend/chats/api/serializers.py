@@ -1,7 +1,10 @@
+from django.contrib.auth import get_user_model
+from django.db.models import Q
+from drf_extra_fields import fields
 from rest_framework import serializers
+from rest_polymorphic.serializers import PolymorphicSerializer
 
-from accounts.api.serializers import UserSerializer,UserMinimalSerializer
-
+from accounts.api.serializers import UserSerializer, UserMinimalSerializer
 from chats.models import (
     Chat,
     Message,
@@ -15,16 +18,8 @@ from chats.models import (
     StoryReplyMessage, MessageReactions
 )
 
-from django.contrib.auth import get_user_model
-
-from rest_polymorphic.serializers import PolymorphicSerializer
-
-from drf_extra_fields import fields
-
-
-from django.db.models import Q
-
 User = get_user_model()
+
 
 class MessageTypeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,7 +36,6 @@ class FileMessageSerializer(serializers.ModelSerializer):
 
     def get_size(self, obj: FileMessage):
         return obj.file.storage.size(obj.file.name)
-
 
 
 class StoryReplyMessageSerializer(serializers.ModelSerializer):
@@ -69,7 +63,6 @@ class MessageReactionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = MessageReactions
         fields = '__all__'
-
 
 
 class ChatSerializer(serializers.ModelSerializer):
@@ -106,41 +99,44 @@ class CreateConversationSerializer(serializers.ModelSerializer):
 
         return users
 
+
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = "__all__"
 
+
 class GroupConversationDetailSerializer(serializers.ModelSerializer):
     members = serializers.SerializerMethodField()
     avatar = serializers.SerializerMethodField()
+
     class Meta:
         model = Group
-        fields = ['id','name','members']
+        fields = ['id', 'name', 'members','avatar']
 
-    def get_members(self,obj:Group):
-        
-        members_names =[]
+    def get_members(self, obj: Group):
+
+        members_names = []
 
         members = obj.group_members.all()
-        
+
         context = self.context["request"]
         current_user = context.user
-        
+
         for member in members:
             if member.user.username == current_user.username:
                 members_names.append("You")
             else:
                 members_names.append(member.user.username)
-        
+
         return members_names
 
-    def get_avatar(self,obj):
+    def get_avatar(self, obj):
         context = self.context["request"]
 
         serializer = GroupSerializer(context=context)
 
-        return serializer.data.get('group_icon',None)
+        return serializer.data.get('group_icon', None)
 
 
 class ConversationListSerializer(serializers.ModelSerializer):
@@ -154,65 +150,66 @@ class ConversationListSerializer(serializers.ModelSerializer):
     # user = serializers.SerializerMethodField()
     messages = serializers.SerializerMethodField()
 
-
     class Meta:
         model = Conversation
         fields = "__all__"
 
-    def __get_user(self,obj:Conversation):
+    def __get_user(self, obj: Conversation):
         current_user = self.context['request'].user
         # print("Obj : ",obj.participants.get(~Q(user=current_user)).user)
         participants = obj.participants.all()
         if len(participants) < 2:
             return participants.first().user
         return participants.get(~Q(user=current_user)).user
-    def get_self_chat(self,obj):
+
+    def get_self_chat(self, obj):
         other_user = self.__get_user(obj)
 
         current_user = self.context['request'].user
 
         return other_user.id == current_user.id
 
-    def get_avatar(self,obj):
+    def get_avatar(self, obj):
         other_user = self.__get_user(obj)
 
-        serializer = UserSerializer(other_user,context=self.context).data
+        serializer = UserSerializer(other_user, context=self.context).data
 
-        return serializer.get('avatar',None)
+        return serializer.get('avatar', None)
 
-    def get_name(self,obj:Conversation):
+    def get_name(self, obj: Conversation):
         return self.__get_user(obj).username
-    
-    def get_is_online(self,obj:Conversation):
+
+    def get_is_online(self, obj: Conversation):
         return self.__get_user(obj).is_online
-    
-    def get_groups_in_common(self,obj:Conversation):
+
+    def get_groups_in_common(self, obj: Conversation):
 
         other_user = self.__get_user(obj)
-
 
         current_user = self.context['request'].user
 
         if other_user == current_user:
-
-            return None
+            return []
 
         groups_in_common = Group.objects.filter(group_members__user=current_user).filter(group_members__user=other_user)
 
-        return GroupConversationDetailSerializer(groups_in_common,context=self.context,many=True).data
-    
-    def get_latest_message(self,obj:Conversation):
+        return GroupConversationDetailSerializer(groups_in_common, context=self.context, many=True).data
+
+    def get_latest_message(self, obj: Conversation):
         last_message = obj.messages.last()
         if last_message:
-            return MessageSerializer(last_message,many=True,context=self.context).data
+            return MessageSerializer(last_message, context=self.context).data
         return None
 
-
-    def get_messages(self,obj:Group):
+    def get_messages(self, obj: Conversation):
 
         messages = Message.objects.filter(chat=obj)
 
-        return MessageSerializer(messages,many=True,context=self.context).data
+        print("Messages : ",messages)
+
+        # return []
+
+        return MessageSerializer(messages, many=True, context=self.context).data
 
     # def get_user(self,obj:Conversation):
 
@@ -225,7 +222,6 @@ class CreateGroupConversationSerializer(serializers.ModelSerializer):
     users = serializers.ListSerializer(child=serializers.IntegerField())
     # group_icon = serializers.ImageField()
     group_icon = fields.Base64ImageField()
-
 
     class Meta:
         model = Group
@@ -242,9 +238,6 @@ class CreateGroupConversationSerializer(serializers.ModelSerializer):
         return users
 
 
-
-
-
 class JoinRemoveGroupMemberSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
 
@@ -254,8 +247,9 @@ class JoinRemoveGroupMemberSerializer(serializers.Serializer):
             raise serializers.ValidationError({"user_id": f"The user with  id {user_id} doesn't exists"})
         return user[0]
 
+
 class AddGroupMemberSerializer(serializers.Serializer):
-    users_id = serializers.ListField(child=serializers.IntegerField(min_value=1),min_length=1)
+    users_id = serializers.ListField(child=serializers.IntegerField(min_value=1), min_length=1)
 
     def validate_users_id(self, users_id):
         users = []
@@ -267,6 +261,7 @@ class AddGroupMemberSerializer(serializers.Serializer):
 
         return users
 
+
 class GroupMemberListSerializer(serializers.ModelSerializer):
     user = UserMinimalSerializer(read_only=True)
 
@@ -276,41 +271,37 @@ class GroupMemberListSerializer(serializers.ModelSerializer):
 
 
 class GroupListSerializer(serializers.ModelSerializer):
-    users: list[GroupMemberListSerializer] = serializers.SerializerMethodField()
+    users = serializers.SerializerMethodField()
     latest_message = serializers.SerializerMethodField()
     messages = serializers.SerializerMethodField()
     avatar = serializers.SerializerMethodField()
     created_by = UserMinimalSerializer()
-
 
     class Meta:
         model = Group
         fields = "__all__"
 
     def get_users(self, obj: Group):
-       
-        return GroupMemberListSerializer(GroupMember.objects.filter(group=obj), many=True).data
-    
-    def get_latest_message(self,obj:Group):
+        return GroupMemberListSerializer(GroupMember.objects.filter(group=obj), many=True,context=self.context).data
 
+    def get_latest_message(self, obj: Group):
         last_message = obj.messages.last()
         if last_message:
-            return MessageSerializer(last_message,context=self.context).data
+            return MessageSerializer(last_message, context=self.context).data
         return None
 
-    def get_messages(self,obj:Group):
-
+    def get_messages(self, obj: Group):
         messages = Message.objects.filter(chat=obj)
 
-        return MessageSerializer(messages,many=True,context=self.context).data
+        return MessageSerializer(messages, many=True, context=self.context).data
 
-    def get_avatar(self,obj):
-        context = self.context["request"]
+    def get_avatar(self, obj:Group):
+        serializer = GroupSerializer(obj,context=self.context).data
+        print(serializer)
+        # print("Avatar : ",serializer.get('group_icon', None))
+        # return obj.group_icon
+        return serializer.get('group_icon', None)
 
-        serializer = GroupSerializer(context=context)
-
-
-        return serializer.data.get('group_icon',None)
 
 class ChatPolymorphicSerializer(PolymorphicSerializer):
     model_serializer_mapping = {
@@ -321,24 +312,34 @@ class ChatPolymorphicSerializer(PolymorphicSerializer):
 
 class MessageSerializer(serializers.ModelSerializer):
     content = MessageTypePolymorphicSerializer()
+    sender = UserMinimalSerializer()
+    parent = serializers.SerializerMethodField()
+
     class Meta:
         model = Message
         fields = "__all__"
 
+    def get_parent(self, obj:Message):
+
+        if obj.parent_message:
+            return MessageSerializer(obj.parent_message).data
+        return None
+
+
 class MessageCreateSerializer(serializers.ModelSerializer):
     chat = ChatPolymorphicSerializer()
     content = MessageTypePolymorphicSerializer()
+
     class Meta:
         model = Message
-        fields = ['chat','content','parent_message']
-
+        fields = ['chat', 'content', 'parent_message']
 
 
 class MessageReactionsCreateSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = MessageReactions
         fields = ['reaction']
+
 
 class MessageListSerializer(serializers.ModelSerializer):
     chat = ChatPolymorphicSerializer()
@@ -354,10 +355,12 @@ class MessageListSerializer(serializers.ModelSerializer):
             return MessageListSerializer(obj.parent_message).data
         return None
 
+
 class SeenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Seen
         fields = "__all__"
+
 
 class SeenListSerializer(serializers.ModelSerializer):
     class Meta:

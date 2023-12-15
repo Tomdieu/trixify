@@ -11,6 +11,7 @@ from .models import (
     MessageType,
     FileMessage,
     TextMessage,
+    PositionMessage,
     StoryReplyMessage,
 MessageReactions
 )
@@ -122,3 +123,7 @@ class SeenAdmin(admin.ModelAdmin):
 class MessageReactionsAdmin(admin.ModelAdmin):
     list_display = ['id','message','reaction','user']
     list_per_page = 25
+
+@admin.register(PositionMessage)
+class PositionMessageAdmin(admin.ModelAdmin):
+    pass

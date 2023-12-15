@@ -12,6 +12,7 @@ from chats.signal import user_added_to_group_conversation
 from story.models import Story
 from django.utils.translation import gettext_lazy as _
 
+
 # Create your models here.
 
 User = get_user_model()
@@ -178,7 +179,20 @@ class FileMessage(MessageType):
     
     def __repr__(self) -> str:
         return f"Text : {self.text} File : {self.file.name}"
+    
 
+class PositionMessage(MessageType):
+
+    lat = models.FloatField()
+    lng = models.FloatField()
+
+    label = models.CharField(max_length=255)
+
+    def __str__(self) -> str:
+        return f"{self.label} [{self.lat},{self.lng}]"
+    
+    def __repr__(self) -> str:
+        return f"{self.label} Location(lng={self.lng},lat={self.lat})"
 
 class StoryReplyMessage(MessageType):
     story = models.ForeignKey(Story, on_delete=models.CASCADE)
@@ -188,8 +202,8 @@ class StoryReplyMessage(MessageType):
     def __str__(self):
         return f"Story : {self.story} Text : {self.text} File : {self.file.name}"
     
-    def __repr__(self):
-        return f"Story : {self.story} Text : {self.text} File : {self.file.name}"
+    # def __repr__(self):
+    #     return f"Story : {self.story} Text : {self.text} File : {self.file.name}"
 
 
 class Message(models.Model):
