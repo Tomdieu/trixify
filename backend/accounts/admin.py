@@ -87,8 +87,10 @@ class UserSocialLinksAdmin(admin.ModelAdmin):
 
 @admin.register(UserLoginActivity)
 class UserLoginActivityAdmin(admin.ModelAdmin):
-    pass
+    list_per_page = 25
+    
 
 @admin.register(UserSessions)
 class UserSessionsAdmin(admin.ModelAdmin):
-    pass
+    list_per_page = 25
+                
