@@ -102,9 +102,10 @@ export interface StoryReplyMessageType extends MessageType {
 }
 
 export interface ChatMessageType {
+    id:number;
     chat:ChatType;
     sender:MininalUserType;
-    content:MessageType;
+    content:TextMessageType | FileMessageType | StoryReplyMessageType;
     parent_message?:ChatMessageType;
     created_at:string;
     updated_at:string;
