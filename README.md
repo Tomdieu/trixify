@@ -1,7 +1,3 @@
-Certainly! Here's the modified GitHub description based on the information you provided:
-
----
-
 # Ayoba Clone
 
 🚀 Welcome to the Ayoba Clone – a chat application inspired by Ayoba, built with React Native (Expo), Django with Django Rest Framework (Drf), and Next.js!
@@ -44,5 +40,3 @@ For the backend:
 
 Feel free to contribute, report issues, or suggest improvements. Happy coding! 🚀
 
----
-Make sure to update this structure if it differs in your actual project
