@@ -1,6 +1,6 @@
-# Ayoba Clone
+# Trixify
 
-🚀 Welcome to the Ayoba Clone – a chat application inspired by Ayoba, built with React Native (Expo), Django with Django Rest Framework (Drf), and Next.js!
+🚀 Welcome to Trixify – a chat application, built with React Native (Expo), Django with Django Rest Framework (Drf), and Next.js!
 
 ## Features
 
@@ -17,7 +17,7 @@
 
 ## Getting Started
 
-1. Clone the repository: `git clone https://github.com/Tomdieu/ayoba-clone.git`
+1. Clone the repository: `git clone https://github.com/Tomdieu/trixify.git`
 2. Navigate to the mobile directory: `cd frontend/android`
 3. Install Expo dependencies: `npm install`
 4. Run the mobile app: `npm start`
